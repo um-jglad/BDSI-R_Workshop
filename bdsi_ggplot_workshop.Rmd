@@ -1,0 +1,174 @@
+---
+title: "BDSI GGPlot Workshop"
+output:
+  html_document:
+    toc: yes
+    df_print: paged
+  html_notebook:
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+# Load in packages and data
+
+```{r message=FALSE, warning=TRUE, results='hide'}
+#library(paletteer)
+library(ggplot2)
+library(gapminder)
+library(tidyverse)
+```
+
+# Example 1
+
+```{r}
+
+gapminder %>% 
+  filter(
+    year %in% c(1952, 2007)
+  ) %>% 
+  ggplot() +
+  aes(x = gdpPercap) +
+  aes(y = lifeExp) +
+  geom_point() +
+  aes(color = continent) +
+  aes(size = pop) +
+  facet_wrap(vars(year),
+             nrow = 2)
+
+```
+
+# Example 2
+
+```{r}
+gapminder %>% 
+  filter(year == 2007) %>% 
+ggplot()+
+  aes(x=gdpPercap,
+      y=lifeExp,
+      shape=continent)+
+  geom_point()
+```
+
+# Geom_histogram
+
+```{r}
+gapminder %>% 
+  filter(year == 1952) %>% 
+  ggplot()+
+  aes(x=lifeExp,
+      fill=continent)+
+  geom_histogram(alpha=0.5)
+```
+
+# geom_boxplot
+
+```{r}
+gapminder %>% 
+  filter(year == 1952,
+         continent !='Oceania') %>% 
+  ggplot()+
+  aes(x=lifeExp,
+      fill=continent)+
+  geom_boxplot(alpha=0.2)
+```
+
+# geom_contour
+
+```{r}
+gapminder %>% 
+  ggplot()+
+  aes(x=year,
+      y=lifeExp,
+      group=country)+
+  geom_smooth(
+    method = 'lm',
+    se = FALSE
+  )
+
+```
+
+# Change across time
+
+## compere trends in per capita GDP over time by continent
+
+```{r}
+gapminder %>% 
+  ggplot()+
+  aes(x=year,
+      y=gdpPercap,
+      color=continent)+
+  geom_smooth(se=FALSE)
+```
+
+```{r}
+gapminder %>% 
+  filter(year==2007) %>% 
+  group_by(continent) %>%
+  summarise(count=n()) %>% 
+  ggplot()+
+  aes(x=continent,
+      y=count,
+      fill=continent)+
+  geom_col()
+```
+
+# Column Charts for Multiple Groups
+
+# Life exp for each continent for years 1952-2007
+
+```{r}
+gapminder %>% 
+  filter(year %in% c(1957,2007)) %>% 
+  group_by(continent,year) %>% 
+  summarise(avgLife = mean(lifeExp)) %>% 
+  ggplot()+
+  aes(x=continent,
+      y=avgLife,
+      fill=factor(year))+
+  geom_col(position='dodge')
+```
+
+# Customizing Colors
+
+```{r}
+p = gapminder %>% 
+  filter(country == 'United States', year > 1990) %>% 
+  ggplot()+
+  aes(gdpPercap, lifeExp)+
+  geom_point()
+
+p=p+aes(color=factor(year))
+
+p=p+scale_color_manual(
+  values = 
+    c('1992'='blue',
+      '1997'='red',
+      '2002'='orange',
+      '2007'='yellow')
+  )+
+  theme_minimal()
+p
+```
+
+# Palatteer
+
+```{r}
+#scale_colour_paletteer_d("nationalparkcolors::Acadia")
+#scale_color_paletteer_d("nationalparkcolors::Acadia")
+#scale_fill_paletteer_d("nationalparkcolors::Acadia")
+#paletteer_d("nationalparkcolors::Acadia")
+
+#gapminder %>% 
+#  filter(year==2007) %>% 
+#  group_by(continent) %>%
+#  summarise(count=n()) %>% 
+#  ggplot()+
+#  aes(x=continent,
+#      y=count,
+#      fill=continent)+
+#  geom_col()+
+#  scale_fill_paletteer_d("nationalparkcolors::Acadia") +
+#  labs(x = NULL, y = NULL) +
+#  theme_minimal()
+```
