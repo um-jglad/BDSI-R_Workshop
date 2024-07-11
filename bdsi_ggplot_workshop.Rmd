@@ -11,7 +11,7 @@ output: html_document
 # Load in packages and data
 
 ```{r message=FALSE, warning=TRUE, results='hide'}
-#library(paletteer)
+library(paletteer)
 library(ggplot2)
 library(gapminder)
 library(tidyverse)
@@ -152,21 +152,21 @@ p
 # Palatteer
 
 ```{r}
-#scale_colour_paletteer_d("nationalparkcolors::Acadia")
-#scale_color_paletteer_d("nationalparkcolors::Acadia")
-#scale_fill_paletteer_d("nationalparkcolors::Acadia")
-#paletteer_d("nationalparkcolors::Acadia")
+# scale_colour_paletteer_d("nationalparkcolors::Acadia")
+# scale_color_paletteer_d("nationalparkcolors::Acadia")
+# scale_fill_paletteer_d("nationalparkcolors::Acadia")
+# paletteer_d("nationalparkcolors::Acadia")
 
-#gapminder %>% 
-#  filter(year==2007) %>% 
-#  group_by(continent) %>%
-#  summarise(count=n()) %>% 
-#  ggplot()+
-#  aes(x=continent,
-#      y=count,
-#      fill=continent)+
-#  geom_col()+
-#  scale_fill_paletteer_d("nationalparkcolors::Acadia") +
-#  labs(x = NULL, y = NULL) +
-#  theme_minimal()
+gapminder %>%
+ filter(year==2007) %>%
+ group_by(continent) %>%
+ summarise(count=n()) %>%
+ ggplot()+
+ aes(x=continent,
+     y=count,
+     fill=continent)+
+ geom_col()+
+ scale_fill_paletteer_d("nationalparkcolors::Acadia") +
+ labs(x = NULL, y = NULL) +
+ theme_minimal()
 ```
