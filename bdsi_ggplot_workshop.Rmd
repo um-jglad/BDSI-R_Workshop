@@ -1,13 +1,11 @@
 ---
 title: "BDSI GGPlot Workshop"
-output:
-  html_document:
-    toc: yes
-    df_print: paged
-  html_notebook:
-    theme: flatly
-    toc: yes
-    toc_float: yes
+  knit: (function(input_file, encoding) {
+    out_dir <- 'docs';
+    rmarkdown::render(input_file,
+      encoding=encoding,
+      output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+output: html_document
 ---
 
 # Load in packages and data
