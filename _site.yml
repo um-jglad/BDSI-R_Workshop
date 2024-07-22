@@ -1,0 +1,12 @@
+name: "BDSI-2024_Workshops"
+output_dir: "docs"
+navbar:
+  title: "BDSI 2024 R Workshops"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "ggplot"
+      href: bdsi_ggplot_workshop.html
+output:
+  html_document:
+    theme: cosmo
