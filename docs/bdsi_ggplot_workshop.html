@@ -11,7 +11,7 @@
 
 
 
-<title>BDSI 2024 R Workshops</title>
+<title>BDSI ggplot Workshop</title>
 
 <script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -260,12 +260,166 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">BDSI 2024 R Workshops</h1>
+<h1 class="title toc-ignore">BDSI ggplot Workshop</h1>
 
 </div>
 
 
-<p>This website was generated using Rmarkdown and GitHub Pages!</p>
+<div id="load-in-packages-and-data" class="section level1">
+<h1>Load in packages and data</h1>
+<pre class="r"><code>library(paletteer)
+library(ggplot2)
+library(gapminder)
+library(tidyverse)</code></pre>
+</div>
+<div id="example-1" class="section level1">
+<h1>Example 1</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(
+    year %in% c(1952, 2007)
+  ) %&gt;% 
+  ggplot() +
+  aes(x = gdpPercap) +
+  aes(y = lifeExp) +
+  geom_point() +
+  aes(color = continent) +
+  aes(size = pop) +
+  facet_wrap(vars(year),
+             nrow = 2)</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="example-2" class="section level1">
+<h1>Example 2</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+ggplot()+
+  aes(x=gdpPercap,
+      y=lifeExp,
+      shape=continent)+
+  geom_point()</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="geom_histogram" class="section level1">
+<h1>Geom_histogram</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(year == 1952) %&gt;% 
+  ggplot()+
+  aes(x=lifeExp,
+      fill=continent)+
+  geom_histogram(alpha=0.5)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="geom_boxplot" class="section level1">
+<h1>geom_boxplot</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(year == 1952,
+         continent !=&#39;Oceania&#39;) %&gt;% 
+  ggplot()+
+  aes(x=lifeExp,
+      fill=continent)+
+  geom_boxplot(alpha=0.2)</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="geom_contour" class="section level1">
+<h1>geom_contour</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  ggplot()+
+  aes(x=year,
+      y=lifeExp,
+      group=country)+
+  geom_smooth(
+    method = &#39;lm&#39;,
+    se = FALSE
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="change-across-time" class="section level1">
+<h1>Change across time</h1>
+<div id="compere-trends-in-per-capita-gdp-over-time-by-continent"
+class="section level2">
+<h2>compere trends in per capita GDP over time by continent</h2>
+<pre class="r"><code>gapminder %&gt;% 
+  ggplot()+
+  aes(x=year,
+      y=gdpPercap,
+      color=continent)+
+  geom_smooth(se=FALSE)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(year==2007) %&gt;% 
+  group_by(continent) %&gt;%
+  summarise(count=n()) %&gt;% 
+  ggplot()+
+  aes(x=continent,
+      y=count,
+      fill=continent)+
+  geom_col()</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="column-charts-for-multiple-groups" class="section level1">
+<h1>Column Charts for Multiple Groups</h1>
+</div>
+<div id="life-exp-for-each-continent-for-years-1952-2007"
+class="section level1">
+<h1>Life exp for each continent for years 1952-2007</h1>
+<pre class="r"><code>gapminder %&gt;% 
+  filter(year %in% c(1957,2007)) %&gt;% 
+  group_by(continent,year) %&gt;% 
+  summarise(avgLife = mean(lifeExp)) %&gt;% 
+  ggplot()+
+  aes(x=continent,
+      y=avgLife,
+      fill=factor(year))+
+  geom_col(position=&#39;dodge&#39;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;continent&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="customizing-colors" class="section level1">
+<h1>Customizing Colors</h1>
+<pre class="r"><code>p = gapminder %&gt;% 
+  filter(country == &#39;United States&#39;, year &gt; 1990) %&gt;% 
+  ggplot()+
+  aes(gdpPercap, lifeExp)+
+  geom_point()
+
+p=p+aes(color=factor(year))
+
+p=p+scale_color_manual(
+  values = 
+    c(&#39;1992&#39;=&#39;blue&#39;,
+      &#39;1997&#39;=&#39;red&#39;,
+      &#39;2002&#39;=&#39;orange&#39;,
+      &#39;2007&#39;=&#39;yellow&#39;)
+  )+
+  theme_minimal()
+p</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="palatteer" class="section level1">
+<h1>Palatteer</h1>
+<pre class="r"><code># scale_colour_paletteer_d(&quot;nationalparkcolors::Acadia&quot;)
+# scale_color_paletteer_d(&quot;nationalparkcolors::Acadia&quot;)
+# scale_fill_paletteer_d(&quot;nationalparkcolors::Acadia&quot;)
+# paletteer_d(&quot;nationalparkcolors::Acadia&quot;)
+
+gapminder %&gt;%
+ filter(year==2007) %&gt;%
+ group_by(continent) %&gt;%
+ summarise(count=n()) %&gt;%
+ ggplot()+
+ aes(x=continent,
+     y=count,
+     fill=continent)+
+ geom_col()+
+ scale_fill_paletteer_d(&quot;nationalparkcolors::Acadia&quot;) +
+ labs(x = NULL, y = NULL) +
+ theme_minimal()</code></pre>
+<p><img src="bdsi_ggplot_workshop_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
 
 
 
